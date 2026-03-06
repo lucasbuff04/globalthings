@@ -19,6 +19,7 @@ try {
 } catch (e) {}
 
 export default defineConfig({
+  video: false,
   projectId: "7s5okt",
   retries: {
     runMode: 2,

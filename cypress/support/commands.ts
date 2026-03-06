@@ -401,7 +401,7 @@ declare global {
   }
 }
 
-export { };
+export = {};
 
 Cypress.Commands.add('createBankAccount', (name: string) => {
   cy.intercept('POST', '**graphql**', (req) => {
@@ -428,7 +428,7 @@ Cypress.Commands.add('deleteBankAccount', (name: string) => {
       });
     }
   });
-
+  
   cy.contains(name).closest('[data-test*="bankaccount-list-item"]').find('[data-test*="delete"]').click();
 });
 
