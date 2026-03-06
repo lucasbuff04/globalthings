@@ -2,6 +2,7 @@ name: QA Challenge Candidate
 
 on:
   pull_request:
+    branches: [ main ]
     paths:
       - 'cypress/tests/candidate/**'
       - 'cypress/tests/api/**'
