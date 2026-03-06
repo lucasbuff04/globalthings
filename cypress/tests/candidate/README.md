@@ -248,3 +248,34 @@ Transactions
 API
 └── TC-006 login api + checkAuth
 └── login.api.spec.ts → Release v1.0 ✅
+
+## Qualidade Assistida por IA
+
+### Usos Práticos
+
+**1. Geração de Edge Cases a partir de Diffs de PR**
+Ao enviar o diff de um PR para um LLM (ex.: GPT-4, Gemini), o modelo analisa os caminhos de código alterados e sugere cenários de teste que revisores humanos poderiam deixar passar — como valores limite, entradas nulas, condições de corrida e edge cases de permissão. Isso reduz a lacuna entre mudança de código e cobertura de testes sem exigir análise manual de cada diff.
+
+**2. Triagem e Classificação de Falhas**
+Após uma execução de testes, a IA pode analisar logs de erro, stack traces e screenshots para classificar automaticamente as falhas em: teste instável (flaky), problema de ambiente, regressão ou bug conhecido. Isso reduz o tempo gasto pelos engenheiros investigando falhas no CI e permite priorizar regressões reais em vez de ruído.
+
+**3. Geração de Dados de Teste Sintéticos**
+LLMs conseguem gerar datasets de teste realistas e diversificados (ex.: perfis de usuário, inputs de formulário, payloads de API) respeitando regras de negócio e contratos de dados. Isso é especialmente útil para evitar fixtures estáticas e para testar lógicas de validação com entradas variadas — sem depender de dados de produção.
+
+---
+
+### Risco / Limitação
+
+**Alucinação e Falsa Confiança**
+Modelos de IA podem gerar casos de teste ou classificar falhas com alta aparente confiança, mas de forma incorreta — sugerindo edge cases inválidos, classificando uma regressão real como flaky test, ou produzindo dados que violam restrições do sistema. Sem uma revisão humana obrigatória, agir cegamente sobre o output da IA pode reduzir a qualidade ao invés de melhorá-la. Todo artefato gerado por IA deve ser tratado como rascunho, não como verdade absoluta.
+
+---
+
+### Métrica a Acompanhar
+
+**Taxa de Escape de Defeitos (TED)**
+Mede o percentual de bugs encontrados em produção em relação ao total de bugs encontrados.
+
+TED = (Bugs encontrados em produção / Total de bugs encontrados) × 100
+
+Essa métrica reflete diretamente se a geração de testes e a triagem assistidas por IA estão capturando mais problemas mais cedo no pipeline. Uma tendência de queda na TED ao longo do tempo indica que a IA está gerando valor real para o processo de qualidade — e não apenas gerando atividade.
