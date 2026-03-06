@@ -401,8 +401,6 @@ declare global {
   }
 }
 
-export { };
-
 Cypress.Commands.add('createBankAccount', (name: string) => {
   cy.intercept('POST', '**graphql**', (req) => {
     if (req.body.operationName === 'CreateBankAccount') req.alias = 'gqlCreateBankAccountMutation';
@@ -428,7 +426,7 @@ Cypress.Commands.add('deleteBankAccount', (name: string) => {
       });
     }
   });
-
+  
   cy.contains(name).closest('[data-test*="bankaccount-list-item"]').find('[data-test*="delete"]').click();
 });
 

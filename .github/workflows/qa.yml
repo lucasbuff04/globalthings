@@ -11,35 +11,36 @@ jobs:
   cypress-challenge:
     runs-on: ubuntu-latest
     timeout-minutes: 12
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - uses: actions/setup-node@v4
       with:
         node-version: 20
         cache: 'npm'
-    
+
     - run: yarn install --frozen-lockfile
-    
+
     - name: Cypress install
       uses: cypress-io/github-action@v6
       with:
         runTests: false
-    
+
     - name: Run Challenge Tests
       uses: cypress-io/github-action@v6
       with:
         start: yarn start:ci
-        wait-on: 'http://localhost:3000'
-        wait-on-timeout: 120
+        wait-on: 'http://127.0.0.1:3000'
+        wait-on-timeout: 180
         spec: |
           cypress/tests/candidate/*.spec.ts
           cypress/tests/api/*.spec.ts
         browser: chrome
         headed: false
-        video: true
-    
+      env:
+        API_PORT: 3001
+
     - uses: actions/upload-artifact@v4
       if: always()
       with:
