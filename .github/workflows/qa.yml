@@ -39,7 +39,7 @@ jobs:
         browser: chrome
         headed: false
       env:
-        API_PORT: 3001
+        BACKEND_PORT: 3001
 
     - uses: actions/upload-artifact@v4
       if: always()
