@@ -390,3 +390,57 @@ Cypress.Commands.add("loginByGoogleApi", () => {
     }
   );
 });
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      createBankAccount(name: string): Chainable<void>;
+      deleteBankAccount(name: string): Chainable<void>;
+      sendPayment(recipient: string, amount: string, note: string): Chainable<void>;
+    }
+  }
+}
+
+Cypress.Commands.add('createBankAccount', (name: string) => {
+  cy.intercept('POST', '**graphql**', (req) => {
+    if (req.body.operationName === 'CreateBankAccount') req.alias = 'gqlCreateBankAccountMutation';
+  });
+
+  cy.getBySel('bankaccount-new').click();
+  cy.getBySelLike('bankName-input').type(name);
+  cy.getBySelLike('routingNumber-input').type('987654321');
+  cy.getBySelLike('accountNumber-input').type('123456789');
+  cy.getBySelLike('submit').click();
+
+  cy.wait('@gqlCreateBankAccountMutation');
+});
+
+Cypress.Commands.add('deleteBankAccount', (name: string) => {
+  cy.intercept('POST', '**graphql**', (req) => {
+    if (req.body.operationName === 'DeleteBankAccount') {
+      req.alias = 'gqlDeleteBankAccountMutation';
+      req.reply((res) => {
+        expect(res.statusCode).to.eq(200);
+        expect(res.body).to.have.property('data');
+        expect(res.body.data).to.have.property('deleteBankAccount');
+      });
+    }
+  });
+  
+  cy.contains(name).closest('[data-test*="bankaccount-list-item"]').find('[data-test*="delete"]').click();
+});
+
+
+
+Cypress.Commands.add('sendPayment', (recipient: string, amount: string, note: string) => {
+  cy.intercept('POST', '/transactions').as('createTransaction');
+
+  cy.getBySelLike('new-transaction').click();
+  cy.getBySelLike('user-list-search-input').type(recipient);
+  cy.getBySelLike('user-list-item').first().click({ force: true });
+  cy.getBySelLike('amount-input').type(amount);
+  cy.getBySelLike('description-input').type(note);
+  cy.getBySelLike('submit-payment').click();
+
+  cy.wait('@createTransaction');
+});

@@ -1,0 +1,49 @@
+name: QA Challenge Candidate
+
+on:
+  pull_request:
+    paths:
+      - 'cypress/tests/candidate/**'
+      - 'cypress/tests/api/**'
+      - 'cypress/support/**'
+
+jobs:
+  cypress-challenge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+    
+    - run: yarn install --frozen-lockfile
+    
+    - name: Cypress install
+      uses: cypress-io/github-action@v6
+      with:
+        runTests: false
+    
+    - name: Run Challenge Tests
+      uses: cypress-io/github-action@v6
+      with:
+        start: yarn start:ci
+        wait-on: 'http://localhost:3000'
+        wait-on-timeout: 120
+        spec: |
+          cypress/tests/candidate/*.spec.ts
+          cypress/tests/api/*.spec.ts
+        browser: chrome
+        headed: false
+        video: true
+    
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: cypress-results
+        path: |
+          cypress/videos
+          cypress/screenshots
