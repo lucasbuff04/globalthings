@@ -401,6 +401,8 @@ declare global {
   }
 }
 
+export {};
+
 Cypress.Commands.add('createBankAccount', (name: string) => {
   cy.intercept('POST', '**graphql**', (req) => {
     if (req.body.operationName === 'CreateBankAccount') req.alias = 'gqlCreateBankAccountMutation';
