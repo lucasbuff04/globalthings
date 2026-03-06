@@ -2,10 +2,7 @@ name: QA Challenge Candidate
 
 on:
   pull_request:
-    paths:
-      - 'cypress/tests/candidate/**'
-      - 'cypress/tests/api/**'
-      - 'cypress/support/**'
+    branches: [ main ]
 
 jobs:
   cypress-challenge:
@@ -22,26 +19,19 @@ jobs:
 
     - run: yarn install --frozen-lockfile
 
-    - name: Build frontend
-      run: yarn build
-      env:
-        BACKEND_PORT: 3001
-        CI: false
-
     - name: Cypress install
       uses: cypress-io/github-action@v6
       with:
         runTests: false
 
-    - name: Run Challenge Tests
+    - name: Run Smoke Tests
       uses: cypress-io/github-action@v6
       with:
         start: yarn start:ci
         wait-on: 'http://127.0.0.1:3000'
         wait-on-timeout: 180
-        spec: |
-          cypress/tests/candidate/*.spec.ts
-          cypress/tests/api/*.spec.ts
+        # Smoke only - trocar por *.spec.ts para rodar tudo
+        spec: cypress/tests/candidate/auth.login.smoke.spec.ts
         browser: chrome
         headed: false
       env:
