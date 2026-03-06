@@ -3,11 +3,6 @@ name: QA Challenge Candidate
 on:
   pull_request:
     branches: [ main ]
-    paths:
-      - 'cypress/tests/candidate/**'
-      - 'cypress/tests/api/**'
-      - 'cypress/support/**'
-
 jobs:
   cypress-challenge:
     runs-on: ubuntu-latest
