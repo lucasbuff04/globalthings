@@ -6,7 +6,7 @@ export class AuthPage {
   }
 
   logout() {
-    if (Cypress.$('body').hasClass('MuiCssBaseline-root')) { // mobile check
+    if (Cypress.$('body').hasClass('MuiCssBaseline-root')) 
       cy.getBySel('sidenav-toggle').click();
     }
     cy.getBySel('sidenav-signout').click();
